@@ -28,7 +28,8 @@ app.use('/sessions', sessionsRoutes);
 app.use('/youtube', youtubeRoutes);
 app.use('/auth', authRoutes);
 
-app.listen(3000, () => {
-  console.log('API démarrée sur http://localhost:3000');
-  console.log('Swagger : http://localhost:3000/api-docs');
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`API démarrée sur http://localhost:${PORT}`);
+  console.log(`Swagger : http://localhost:${PORT}/api-docs`);
 });
