@@ -4,7 +4,7 @@ import Sidebar from '../components/Sidebar'
 import LogTable from '../components/LogTable'
 import '../styles/dashboard.css'
 
-const API = 'http://localhost:3000'
+const API = import.meta.env.VITE_API_URL
 
 function Logs() {
   const [logs, setLogs] = useState([])

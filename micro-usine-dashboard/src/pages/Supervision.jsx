@@ -9,7 +9,7 @@ import StatusTable from '../components/StatusTable'
 import '../styles/dashboard.css'
 import ApiStats from '../components/ApiStats'
 
-const API = 'http://localhost:3000'
+const API = import.meta.env.VITE_API_URL
 
 function Supervision() {
   const [logs, setLogs] = useState([])

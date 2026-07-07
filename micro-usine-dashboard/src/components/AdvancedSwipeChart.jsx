@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts'
 
-const API = 'http://localhost:3000'
+const API = import.meta.env.VITE_API_URL
 
 function AdvancedSwipeChart() {
   const [data, setData] = useState([])

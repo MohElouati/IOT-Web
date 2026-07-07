@@ -4,7 +4,7 @@ import Sidebar from '../components/Sidebar'
 import StatCard from '../components/StatCard'
 import '../styles/dashboard.css'
 
-const API = 'http://localhost:3000'
+const API = import.meta.env.VITE_API_URL
 
 function Systemes() {
   const [broker, setBroker] = useState(null)

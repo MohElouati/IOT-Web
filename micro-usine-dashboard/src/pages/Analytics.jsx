@@ -8,7 +8,7 @@ import SessionStats from '../components/SessionStats'
 import SessionPickerModal from '../components/SessionPickerModal'
 import '../styles/dashboard.css'
 
-const API = 'http://localhost:3000'
+const API = import.meta.env.VITE_API_URL
 
 function Analytics() {
   const [top5, setTop5] = useState([])

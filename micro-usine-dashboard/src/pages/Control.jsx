@@ -4,7 +4,7 @@ import Sidebar from '../components/Sidebar'
 import SwipeButtons from '../components/SwipeButtons'
 import '../styles/dashboard.css'
 
-const API = 'http://localhost:3000'
+const API = import.meta.env.VITE_API_URL
 
 const PLATFORMS = [
   { id: 'youtube', label: 'YouTube', beta: true },

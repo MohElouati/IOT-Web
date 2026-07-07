@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts'
 
-const API = 'http://localhost:3000'
+const API = import.meta.env.VITE_API_URL
 
 function ApiStats({ period = '24h' }) {
   const [stats, setStats] = useState(null)
