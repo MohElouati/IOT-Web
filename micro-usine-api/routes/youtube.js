@@ -62,7 +62,7 @@ router.get('/video', async (req, res) => {
  */
 router.get('/playlist', async (req, res) => {
   if (!global.oauth2Client) {
-    return res.status(401).json({ error: 'Non authentifié - allez sur /auth/login' })
+    return res.status(409).json({ error: 'YouTube non connecté - allez sur /auth/login' })
   }
 
   try {
