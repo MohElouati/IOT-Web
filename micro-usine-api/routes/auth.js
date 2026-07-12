@@ -7,6 +7,27 @@ require('dotenv').config();
 const JWT_SECRET = process.env.JWT_SECRET;
 const USERS = { admin: process.env.ADMIN_PASSWORD };
 
+const MAX_ATTEMPTS = 3;
+const LOCKOUT_MS = 15 * 60 * 1000;
+const loginAttempts = new Map();
+
+function getLockout(ip) {
+  const entry = loginAttempts.get(ip);
+  if (!entry) return null;
+  if (entry.lockedUntil && entry.lockedUntil > Date.now()) return entry;
+  if (entry.lockedUntil && entry.lockedUntil <= Date.now()) loginAttempts.delete(ip);
+  return null;
+}
+
+function registerFailedAttempt(ip) {
+  const entry = loginAttempts.get(ip) || { count: 0, lockedUntil: null };
+  entry.count += 1;
+  if (entry.count >= MAX_ATTEMPTS) {
+    entry.lockedUntil = Date.now() + LOCKOUT_MS;
+  }
+  loginAttempts.set(ip, entry);
+}
+
 const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
   process.env.GOOGLE_CLIENT_SECRET,
@@ -24,13 +45,26 @@ const oauth2Client = new google.auth.OAuth2(
  *         description: Token JWT
  *       401:
  *         description: Identifiants incorrects
+ *       429:
+ *         description: Trop de tentatives, compte temporairement bloqué
  */
 router.post('/token', (req, res) => {
+  const ip = req.ip;
+  const lockout = getLockout(ip);
+  if (lockout) {
+    const retryAfterSec = Math.ceil((lockout.lockedUntil - Date.now()) / 1000);
+    res.set('Retry-After', String(retryAfterSec));
+    return res.status(429).json({ error: 'Trop de tentatives, réessayez plus tard', retryAfterSec });
+  }
+
   const { username, password } = req.body;
   if (USERS[username] && USERS[username] === password) {
+    loginAttempts.delete(ip);
     const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: '12h' });
     return res.json({ token });
   }
+
+  registerFailedAttempt(ip);
   res.status(401).json({ error: 'Identifiants incorrects' });
 });
 
