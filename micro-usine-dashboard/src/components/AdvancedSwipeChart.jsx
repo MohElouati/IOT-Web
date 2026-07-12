@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import api from '../api'
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts'
-
-const API = import.meta.env.VITE_API_URL
 
 function AdvancedSwipeChart() {
   const [data, setData] = useState([])
 
   const fetchData = async () => {
-    const res = await axios.get(`${API}/logs`)
+    const res = await api.get(`/logs`)
     const logs = res.data
 
     const grouped = logs.reduce((acc, log) => {

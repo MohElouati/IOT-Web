@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import api from '../api'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import Sidebar from '../components/Sidebar'
 import StatCard from '../components/StatCard'
@@ -7,19 +7,17 @@ import ScrollControl from '../components/ScrollControl'
 import LogTable from '../components/LogTable'
 import '../styles/dashboard.css'
 
-const API = import.meta.env.VITE_API_URL
-
 function Dashboard() {
   const [logs, setLogs] = useState([])
   const [status, setStatus] = useState(null)
 
   const fetchLogs = async () => {
-    const res = await axios.get(`${API}/logs`)
+    const res = await api.get(`/logs`)
     setLogs(res.data)
   }
 
   const fetchStatus = async () => {
-    const res = await axios.get(`${API}/status`)
+    const res = await api.get(`/status`)
     setStatus(res.data)
   }
 

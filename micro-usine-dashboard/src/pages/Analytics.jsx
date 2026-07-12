@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import api from '../api'
 import Sidebar from '../components/Sidebar'
 import SankeyChart from '../components/SankeyChart'
 import AdvancedSwipeChart from '../components/AdvancedSwipeChart'
@@ -7,8 +7,6 @@ import ReportModal from '../components/ReportModal'
 import SessionStats from '../components/SessionStats'
 import SessionPickerModal from '../components/SessionPickerModal'
 import '../styles/dashboard.css'
-
-const API = import.meta.env.VITE_API_URL
 
 function Analytics() {
   const [top5, setTop5] = useState([])
@@ -21,12 +19,12 @@ function Analytics() {
   const [swipesBySession, setSwipesBySession] = useState({})
 
   const fetchTop5 = async () => {
-    const res = await axios.get(`${API}/api-stats/top5`)
+    const res = await api.get(`/api-stats/top5`)
     setTop5(res.data)
   }
 
   const fetchSessions = async () => {
-    const res = await axios.get(`${API}/sessions/stats`)
+    const res = await api.get(`/sessions/stats`)
     const withSwipes = res.data.filter(s => s.total_swipes > 0)
     setSessions(withSwipes)
     if (withSwipes.length > 0 && !selectedSession) {
@@ -34,20 +32,20 @@ function Analytics() {
     }
     const swipesMap = {}
     await Promise.all(withSwipes.map(async s => {
-      const r = await axios.get(`${API}/sessions/${s.id}/swipes`)
+      const r = await api.get(`/sessions/${s.id}/swipes`)
       swipesMap[s.id] = r.data
     }))
     setSwipesBySession(swipesMap)
   }
 
   const fetchSwipes = async (sessionId) => {
-    const res = await axios.get(`${API}/sessions/${sessionId}/swipes`)
+    const res = await api.get(`/sessions/${sessionId}/swipes`)
     setSwipeData(res.data)
   }
 
   const deleteSession = async (sessionId) => {
     if (!window.confirm('Supprimer cette session ?')) return
-    await axios.delete(`${API}/sessions/${sessionId}`)
+    await api.delete(`/sessions/${sessionId}`)
     const updated = sessions.filter(s => s.id !== sessionId)
     setSessions(updated)
     if (selectedSession?.id === sessionId) {

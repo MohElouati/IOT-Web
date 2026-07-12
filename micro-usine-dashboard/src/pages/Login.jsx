@@ -20,6 +20,9 @@ function Login() {
       if (data.token) {
         localStorage.setItem('token', data.token)
         navigate('/supervision')
+      } else if (res.status === 429) {
+        const minutes = Math.ceil(data.retryAfterSec / 60)
+        setError(`Trop de tentatives, réessayez dans ${minutes} min`)
       } else {
         setError('Identifiants incorrects')
       }

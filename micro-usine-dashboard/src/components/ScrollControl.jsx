@@ -1,10 +1,8 @@
-import axios from 'axios'
-
-const API = import.meta.env.VITE_API_URL
+import api from '../api'
 
 function ScrollControl({ onScroll }) {
   const scroll = async (direction) => {
-    await axios.post(`${API}/scroll/${direction}`)
+    await api.post(`/scroll/${direction}`)
     onScroll()
   }
 

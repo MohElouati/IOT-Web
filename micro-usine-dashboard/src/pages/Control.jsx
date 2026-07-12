@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import api from '../api'
 import Sidebar from '../components/Sidebar'
 import SwipeButtons from '../components/SwipeButtons'
 import '../styles/dashboard.css'
@@ -16,14 +16,14 @@ function Control() {
   const [ytConnected, setYtConnected] = useState(false)
 
   const fetchActiveSession = async () => {
-    const res = await axios.get(`${API}/sessions/active`)
+    const res = await api.get(`/sessions/active`)
     if (res.data.id) setSession(res.data)
     else setSession(null)
   }
 
   const checkYoutubeAuth = async () => {
     try {
-      const res = await axios.get(`${API}/youtube/playlist`)
+      const res = await api.get(`/youtube/playlist`)
       if (res.data.length > 0) setYtConnected(true)
     } catch {
       setYtConnected(false)
@@ -39,7 +39,7 @@ function Control() {
     window.open(`${API}/auth/login`, '_blank')
     const interval = setInterval(async () => {
       try {
-        const res = await axios.get(`${API}/youtube/playlist`)
+        const res = await api.get(`/youtube/playlist`)
         if (res.data.length > 0) {
           setYtConnected(true)
           clearInterval(interval)
@@ -50,12 +50,12 @@ function Control() {
   }
 
   const startSession = async (platform) => {
-    const res = await axios.post(`${API}/sessions/start`, { platform })
+    const res = await api.post(`/sessions/start`, { platform })
     setSession(res.data)
   }
 
   const stopSession = async () => {
-    await axios.post(`${API}/sessions/stop`)
+    await api.post(`/sessions/stop`)
     setSession(null)
     setLastAction(null)
   }
@@ -63,13 +63,13 @@ function Control() {
   const handleSwipe = async (direction) => {
     setLastAction(direction)
     if (session) {
-      await axios.post(`${API}/sessions/swipe`, { direction })
+      await api.post(`/sessions/swipe`, { direction })
     }
   }
 
   const emergencyStop = async () => {
     if (!window.confirm('Confirmer l\'arrêt d\'urgence ?')) return
-    await axios.post(`${API}/scroll/emergency-stop`)
+    await api.post(`/scroll/emergency-stop`)
     setLastAction('emergency_stop')
   }
 

@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import api from '../api'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts'
-
-const API = import.meta.env.VITE_API_URL
 
 function ApiStats({ period = '24h' }) {
   const [stats, setStats] = useState(null)
 
   const fetchStats = async () => {
-    const res = await axios.get(`${API}/api-stats?period=${period}`)
+    const res = await api.get(`/api-stats?period=${period}`)
     setStats(res.data)
   }
 

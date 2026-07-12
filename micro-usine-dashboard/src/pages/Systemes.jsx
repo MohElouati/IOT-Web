@@ -1,16 +1,14 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import api from '../api'
 import Sidebar from '../components/Sidebar'
 import StatCard from '../components/StatCard'
 import '../styles/dashboard.css'
-
-const API = import.meta.env.VITE_API_URL
 
 function Systemes() {
   const [broker, setBroker] = useState(null)
 
   const fetchData = async () => {
-    const res = await axios.get(`${API}/system-health/broker`)
+    const res = await api.get(`/system-health/broker`)
     setBroker(res.data)
   }
 

@@ -1,16 +1,14 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import api from '../api'
 import Sidebar from '../components/Sidebar'
 import LogTable from '../components/LogTable'
 import '../styles/dashboard.css'
-
-const API = import.meta.env.VITE_API_URL
 
 function Logs() {
   const [logs, setLogs] = useState([])
 
   const fetchLogs = async () => {
-    const res = await axios.get(`${API}/logs`)
+    const res = await api.get(`/logs`)
     setLogs(res.data)
   }
 

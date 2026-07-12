@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import api from '../api'
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts'
 import Sidebar from '../components/Sidebar'
 import StatCard from '../components/StatCard'
@@ -8,8 +8,6 @@ import TimeFilter from '../components/TimeFilter'
 import StatusTable from '../components/StatusTable'
 import '../styles/dashboard.css'
 import ApiStats from '../components/ApiStats'
-
-const API = import.meta.env.VITE_API_URL
 
 function Supervision() {
   const [logs, setLogs] = useState([])
@@ -20,9 +18,9 @@ function Supervision() {
 
   const fetchData = async () => {
     const [logsRes, statusRes, brokerRes] = await Promise.all([
-      axios.get(`${API}/logs?period=${period}`),
-      axios.get(`${API}/system-health/connectivity`),
-      axios.get(`${API}/system-health/broker`),
+      api.get(`/logs?period=${period}`),
+      api.get(`/system-health/connectivity`),
+      api.get(`/system-health/broker`),
     ])
     setLogs(logsRes.data)
     setStatus(statusRes.data)
