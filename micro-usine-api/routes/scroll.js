@@ -1,9 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const mqtt = require('mqtt');
+const client = require('../mqttClient');
 const { insertLog, updateHeartbeat } = require('../database');
-
-const client = mqtt.connect('mqtt://192.168.1.15:1883');
 
 client.on('connect', () => {
   console.log('MQTT connecté');

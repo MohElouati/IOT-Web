@@ -1,9 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const mqtt = require('mqtt');
+const client = require('../mqttClient');
 const { getLastHeartbeat } = require('../database');
-
-const client = mqtt.connect('mqtt://192.168.1.15:1883');
 
 let brokerData = {
   clients_connected: 0,
@@ -11,6 +9,8 @@ let brokerData = {
   messages_received: 0,
 }
 
+// AWS IoT Core has no $SYS broker-stats topics (Mosquitto-specific), so
+// brokerData stays at its zero defaults there.
 client.on('connect', () => {
   client.subscribe('$SYS/broker/clients/connected')
   client.subscribe('$SYS/broker/uptime')
@@ -55,7 +55,7 @@ router.get('/connectivity', (req, res) => {
 
   res.json({
     status: 'online',
-    broker: '192.168.1.15',
+    broker: process.env.AWS_IOT_ENDPOINT || 'a9qjfqylwh619-ats.iot.eu-west-3.amazonaws.com',
     esp32: esp32Connected
   });
 })
