@@ -9,20 +9,9 @@ let brokerData = {
   messages_received: 0,
 }
 
-// AWS IoT Core has no $SYS broker-stats topics (Mosquitto-specific), so
-// brokerData stays at its zero defaults there.
-client.on('connect', () => {
-  client.subscribe('$SYS/broker/clients/connected')
-  client.subscribe('$SYS/broker/uptime')
-  client.subscribe('$SYS/broker/messages/received')
-})
-
-client.on('message', (topic, message) => {
-  const val = message.toString()
-  if (topic === '$SYS/broker/clients/connected') brokerData.clients_connected = parseInt(val)
-  if (topic === '$SYS/broker/uptime') brokerData.uptime = val
-  if (topic === '$SYS/broker/messages/received') brokerData.messages_received = parseInt(val)
-})
+// AWS IoT Core has no $SYS broker-stats topics (Mosquitto-specific) and
+// forcibly disconnects clients that attempt an unauthorized subscribe, so
+// brokerData just stays at its zero defaults - no subscription to make.
 
 /**
  * @swagger
