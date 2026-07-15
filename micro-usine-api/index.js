@@ -12,9 +12,15 @@ const sessionsRoutes = require('./routes/sessions');
 const youtubeRoutes = require('./routes/youtube');
 const { router: authRoutes } = require('./routes/auth');
 
+const ALLOWED_ORIGINS = [
+  'https://mcu.azops.ovh',
+  'https://iot-web-production-0d2e.up.railway.app',
+  'http://localhost:5173'
+];
+
 const app = express();
 app.set('trust proxy', true);
-app.use(cors());
+app.use(cors({ origin: ALLOWED_ORIGINS }));
 app.use(express.json());
 app.use(requestLogger); // ← ici avant toutes les routes
 
